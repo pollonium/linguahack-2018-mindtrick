@@ -1,28 +1,27 @@
 import requests
 
-# пример того, как выглядит текст
-comment = {
-    'text': "Поздравляем коллектив Томскпромстройбанка с 25-ой годовщиной со дня образования! За это время вы доказали свою жизнеспособность, прочно утвердились на банковско-финансовом рынке, приобрели опыт, авторитет и хорошую репутацию. В вашем коллективе объединились высокопрофессиональные специалисты, с которыми приятно иметь дело. Вы отличаетесь высокой ответственностью и надежностью, тысячи клиентов доверяют вам заботу о своем финансовом благополучии. Ваш принцип – честность и открытость в работе с клиентами – достоин уважения! Мы благодарим вас за понимание проблем потребительской кооперации. Желаем вам успехов, дальнейшего процветания, самых светлых и радужных перспектив и никаких финансовых потрясений!",
-    'original': '',
-}
 
-# параметры запроса
-url = 'https://content-watch.ru/public/api/'
-data = {
-    'action': 'CHECK_TEXT',
-    'text': comment['text'],
-    # todo: засекретить
-    'key': 'g96Xpx8RUpIq893',
-    'ignore': 'http://www.tpsbank.tomsk.ru',
-    'test': 1,
-}
-headers = {'API-Authentication':'xxx','Content-Type':'application/json','Accept':'*/*'}
+class Checker:
+    url = 'https://content-watch.ru/public/api/'
+    payload = {
+        'action': 'CHECK_TEXT',
+        'text': '',
+        # todo: засекретить
+        'key': 'g96Xpx8RUpIq893',
+        'ignore': 'http://www.tpsbank.tomsk.ru',
+        'test': 1,
+    }
 
-# процентная доля должна быть больше или равна 70
-# response = requests.post(url, data, headers=headers)
-response = requests.post(url, data, headers)
-# todo: обработка ошибок (ответа не 200)! Как статуса самого объекта, так и содержимого тела
-print(response.content.decode('utf-8'))
-# 403!
+    def is_original(self, comment, is_test=0):
+        self.payload['text'] = comment
+        # self.payload['test'] = is_test  # todo: раскомментировать строчку для реальных данных
 
-print('ok')
+        # todo: обработка ошибок (ответа не 200)! Как статуса самого объекта, так и содержимого тела
+        response = requests.post(self.url, self.payload)
+        answer = response.json()
+
+        # процентная доля оригинальности должна быть больше или равна 70
+        is_original = 'yes' if float(answer['percent']) >= 70 else 'no'
+
+        self.payload['text'] = ''
+        return is_original
