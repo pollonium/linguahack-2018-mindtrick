@@ -73,6 +73,7 @@ def process(words):
             for key, value in record.items():
                 file.write(f'\n{key}: {value}')
             file.write('\n')
+            words.sort(key=lambda i: i[n], reverse=True)
 
 
 
