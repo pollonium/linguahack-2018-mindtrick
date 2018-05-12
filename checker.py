@@ -9,6 +9,7 @@ comment = {
 # параметры запроса
 url = 'https://content-watch.ru/public/api/'
 action = 'CHECK_TEXT'
+# todo: засекретить
 key = 'g96Xpx8RUpIq893'
 ignore = 'http://www.tpsbank.tomsk.ru'
 
