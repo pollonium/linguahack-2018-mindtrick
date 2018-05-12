@@ -7,9 +7,6 @@ from tomita_executor import Executor
 # filepath = 'data-raw/'
 original_filepath = 'original/'
 # nonoriginal_filepath = 'nonoriginal/'
-#
-#
-filenames = ['1_2.txt']
 
 # checker = Checker()
 # for filename in filenames:
@@ -42,7 +39,7 @@ filenames = ['1_2.txt']
 #     file.close()
 
 parser = Executor()
-# filenames = os.listdir(original_filepath)
+filenames = os.listdir(original_filepath)
 for filename in filenames:
     parser.execute(filename)
 
