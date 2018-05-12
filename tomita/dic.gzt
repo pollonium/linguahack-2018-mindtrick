@@ -1,9 +1,30 @@
 encoding "utf8";
 
 import "base.proto";
-import "articles_base.proto";
+import "facttypes.proto";
 
-TAuxDicArticle "моя_грамматика"
+
+TAuxDicArticle "существительное"
 {
-    key = {"tomita:mygram.cxx" type=CUSTOM}
+    key = {"tomita:noun.cxx" type=CUSTOM}
 }
+
+TAuxDicArticle "глагол"
+{
+    key = {"tomita:verb.cxx" type=CUSTOM}
+}
+
+TAuxDicArticle "прилагательное"
+{
+    key = {"tomita:adj.cxx" type=CUSTOM}
+}
+
+TAuxDicArticle "причастие"
+{
+    key = {"tomita:adv.cxx" type=CUSTOM}
+}
+
+// A (прилагательное)
+// ADV (наречие)
+// S (существительное)
+// V (глагол)
