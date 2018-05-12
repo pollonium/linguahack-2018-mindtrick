@@ -1,3 +1,3 @@
-#encoding "utf8";
+#encoding "utf8"
 
 S -> Adj interp(SignificantWord.Value);

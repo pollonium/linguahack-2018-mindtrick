@@ -3,5 +3,5 @@ import "facttypes_base.proto"; // описание protobuf-типа NFactType.T
 
 message SignificantWord: NFactType.TFact
 {
-  required string Value;
+  required string Value = 1;
 }

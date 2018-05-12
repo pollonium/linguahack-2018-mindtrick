@@ -1,22 +1,17 @@
-encoding "utf8"; // указываем кодировку, в которой написан конфигурационный файл
+encoding "utf8";
 
 TTextMinerConfig {
-  Dictionary = "dic.gzt"; // путь к корневому словарю
-
+  Dictionary = "dic.gzt";
   Input = {File = "1_1.txt"}
 
   Articles = [
     { Name = "существительное" }
-//    { Name = "глагол" },
-//    { Name = "прилагательное" },
-//    { Name = "причастие" }
-  ]
-  Facts = [
-    { Name = SignificantWord }
   ]
 
-  Output = {
-    File = "facts.txt";         // Записать факты в файл "facts.txt"
-    Format = text;              // используя при этом простой текстовый формат
-  }
+  Facts = [
+    { Name = "SignificantWord" }
+  ]
+
+  Output = {File = "facts.txt"}
+  PrettyOutput = "PrettyOutput.html";
 }
