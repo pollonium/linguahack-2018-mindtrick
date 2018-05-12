@@ -3,6 +3,7 @@ import codecs
 import os
 from checker import Checker
 from tomita_executor import Executor
+import bs4  # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
 
 # filepath = 'data-raw/'
 original_filepath = 'original/'
@@ -38,8 +39,24 @@ original_filepath = 'original/'
    #  file.write(comment_pure['text'])
 #     file.close()
 
+# <SignificantWord><Value val="СОТРУДНИК"/></SignificantWord> -- sp4 хранит в итоге имена атрибутов в lowercase
+values = {}
+page = 'facts.txt'
 parser = Executor()
 filenames = os.listdir(original_filepath)
 for filename in filenames:
     parser.execute(filename)
+    file = open(page, 'r', encoding='utf-8-sig')
+    data = file.read()
+    soup = bs4.BeautifulSoup(data, 'lxml')
+    file.close()
 
+    raw_values = soup("value")
+    for raw_value in raw_values:
+        value = raw_value.get('val')
+        if value in values:
+            values[value] += 1
+        else:
+            values[value] = 1
+
+print('yaay!')
