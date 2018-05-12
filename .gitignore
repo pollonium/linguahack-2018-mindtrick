@@ -104,3 +104,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+
+# Custom project rules
+data-raw
+!data-raw/.gitkeep
+
