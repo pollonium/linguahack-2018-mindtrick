@@ -5,7 +5,6 @@ from checker import Checker
 filepath = 'data-raw/'
 
 filenames = os.listdir(filepath)
-filenames.remove('.gitkeep')
 # print(filenames)
 # filenames = ['14_8.txt']
 

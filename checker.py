@@ -21,7 +21,7 @@ class Checker:
         answer = response.json()
 
         # процентная доля оригинальности должна быть больше или равна 70
-        is_original = 'yes' if float(answer['percent']) >= 70 else 'no'
+        is_original = 'no' if answer['error_code'] != 0 or float(answer['percent']) < 70 else 'yes'
 
         self.payload['text'] = ''
         return is_original
