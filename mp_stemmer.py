@@ -1,10 +1,7 @@
 import re
-import os
-import pickle
-import operator
 
 
-class Porter:
+class Stemmer:
     PERFECTIVEGROUND = re.compile(u"((ив|ивши|ившись|ыв|ывши|ывшись)|((?<=[ая])(в|вши|вшись)))$")
     REFLEXIVE = re.compile(u"(с[яь])$")
     ADJECTIVE = re.compile(u"(ее|ие|ые|ое|ими|ыми|ей|ий|ый|ой|ем|им|ым|ом|его|ого|ему|ому|их|ых|ую|юю|ая|яя|ою|ею|ишн|ав|айш|альн|арн|аст|яст|бельн|ебн|ев|ем|енн|еск|ив|ива|ивн|им|ительн|ическ|ичн|лив|н|ов|оват|озн|ом|онн|орн|очн|ск|тельн|уч|чат|чив|ын|яв|яг|ярн)$")
@@ -21,61 +18,64 @@ class Porter:
     P = re.compile(u"ь$")
     NN = re.compile(u"нн$")
 
+    stems = {}
+
     def stem(word):
         word = word.lower()
         word = word.replace(u'ё', u'е')
-        m = re.match(Porter.RVRE, word)
+        m = re.match(Stemmer.RVRE, word)
         print(word)
         if hasattr(m, 'groups') and m.groups():
             pre = m.group(1)
             rv = m.group(2)
-            temp = Porter.PERFECTIVEGROUND.sub('', rv, 1)
+            temp = Stemmer.PERFECTIVEGROUND.sub('', rv, 1)
             if temp == rv:
-                rv = Porter.REFLEXIVE.sub('', rv, 1)
-                temp = Porter.ADJECTIVE.sub('', rv, 1)
+                rv = Stemmer.REFLEXIVE.sub('', rv, 1)
+                temp = Stemmer.ADJECTIVE.sub('', rv, 1)
                 if temp != rv:
                     rv = temp
-                    rv = Porter.PARTICIPLE.sub('', rv, 1)
+                    rv = Stemmer.PARTICIPLE.sub('', rv, 1)
                 else:
-                    temp = Porter.VERB.sub('', rv, 1)
+                    temp = Stemmer.VERB.sub('', rv, 1)
                     if temp == rv:
-                        rv = Porter.NOUN.sub('', rv, 1)
+                        rv = Stemmer.NOUN.sub('', rv, 1)
                     else:
                         rv = temp
             else:
                 rv = temp
 
-            rv = Porter.I.sub('', rv, 1)
+            rv = Stemmer.I.sub('', rv, 1)
 
-            if re.match(Porter.DERIVATIONAL, rv):
-                rv = Porter.DER.sub('', rv, 1)
+            if re.match(Stemmer.DERIVATIONAL, rv):
+                rv = Stemmer.DER.sub('', rv, 1)
 
-            temp = Porter.P.sub('', rv, 1)
+            temp = Stemmer.P.sub('', rv, 1)
             if temp == rv:
-                rv = Porter.SUPERLATIVE.sub('', rv, 1)
-                rv = Porter.NN.sub(u'н', rv, 1)
+                rv = Stemmer.SUPERLATIVE.sub('', rv, 1)
+                rv = Stemmer.NN.sub(u'н', rv, 1)
             else:
                 rv = temp
             word = pre + rv
+
         return word
 
     stem = staticmethod(stem)
 
     def process(self, words):
-        resulting_dict = {}
-        for key, value in words.items():
-            stem = self.stem(key)
-            if stem in resulting_dict:
-                resulting_dict[stem] += words[key]
+        for word, frequency in words.items():
+            stem = self.stem(word)
+            if stem in self.stems:
+                self.stems[stem] += words[word]
             else:
-                resulting_dict[stem] = words[key]
+                self.stems[stem] = words[word]
 
-        dictlist = []
-        for key, value in resulting_dict.items():
-            temp = [key, value]
-            dictlist.append(temp)
+    def print_to_file(self, filename):
+        entries = []
+        for word_stem, stem_frequency in self.stems.items():
+            temp_entry = [word_stem, stem_frequency]
+            entries.append(temp_entry)
 
-        dictlist.sort(key=lambda i: i[1], reverse=True)
-        with open('test.txt', 'w', encoding='utf-8') as file:
-            for record in dictlist:
-                file.write(f'\n{record[0]}: {record[1]}\n')
+        entries.sort(key=lambda i: i[1], reverse=True)
+        with open(filename, 'w', encoding='utf-8') as file:
+            for entry in entries:
+                file.write(f'\n{entry[0]}: {entry[1]}\n')
