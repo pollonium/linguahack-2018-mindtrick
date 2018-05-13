@@ -34,6 +34,8 @@ class Analyzer:
             # При установке is_test=1 с сервера приходят случайно сгенерированный показатель оригинальности текста
             text_is_original = checker.is_original(comment, percentage=70, is_test=1)
             directory = self.payload['originalTextsDir'] if text_is_original else self.payload['nonoriginalTextsDir']
+            if not os.path.exists(directory):
+                os.makedirs(directory)
             file = open(directory + filename, 'w+', encoding='utf-8')
             file.write(comment)
             file.close()
