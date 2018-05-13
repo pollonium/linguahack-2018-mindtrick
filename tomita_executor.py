@@ -2,9 +2,14 @@ import subprocess
 
 
 class Executor:
-    execPath = 'tomitaparser.exe'
-    configFile = 'config.proto'
-    prevFilename = '9_9.txt'
+    execPath = ''
+    configFile = ''
+    prevFilename = ''
+
+    def __init__(self, prev_filename, config_file='config.proto', exec_path='tomitaparser.exe'):
+        self.prevFilename = prev_filename
+        self.execPath = exec_path
+        self.configFile = config_file
 
     def execute(self, filename):
         file = open(self.configFile, 'r', encoding='utf-8')
