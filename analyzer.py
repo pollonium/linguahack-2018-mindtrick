@@ -33,7 +33,7 @@ class Analyzer:
             # процентная доля оригинальности должна быть больше или равна 70
             # При установке is_test=1 с сервера приходят случайно сгенерированный показатель оригинальности текста
             text_is_original = checker.is_original(comment, percentage=70, is_test=1)
-            directory = self.payload['originalTextsDir'] if text_is_original else self.payload['nonoriginalTextsDir']
+            directory = '' if text_is_original else self.payload['nonoriginalTextsDir']
             if not os.path.exists(directory):
                 os.makedirs(directory)
             file = open(directory + filename, 'w+', encoding='utf-8')
@@ -45,21 +45,23 @@ class Analyzer:
         parser = Executor(prev_filename)
         filenames = os.listdir(self.payload['originalTextsDir'])
         for filename in filenames:
+            # todo: перемещать обрабатываемый файл в корень и удалять
             parser.execute(filename)
             with open(self.payload['TomitaOutput'], 'r', encoding='utf-8-sig') as file:
                 data = file.read()
                 soup = bs4.BeautifulSoup(data, 'lxml')
-            # В результирующем файле слова хранятся в элементе следующего формата:
-            # <SignificantWord><Value val="СОТРУДНИК"/></SignificantWord>
-            # Так как тег <Value> не встречается больше ни в каких элементах, то искать нужные слова можно сразу по нему
-            # + sp4 преобразует имена элементов в lowercase
-            tags = soup("value")
-            for tag in tags:
-                word = tag.get('val')
-                if word in self.words:
-                    self.words[word] += 1
-                else:
-                    self.words[word] = 1
+                # В результирующем файле слова хранятся в элементе следующего формата:
+                # <SignificantWord><Value val="СОТРУДНИК"/></SignificantWord>
+                # Так как тег <Value> не встречается больше ни в каких элементах,
+                # то искать нужные слова можно сразу по нему
+                # + sp4 преобразует имена элементов в lowercase
+                tags = soup("value")
+                for tag in tags:
+                    word = tag.get('val')
+                    if word in self.words:
+                        self.words[word] += 1
+                    else:
+                        self.words[word] = 1
 
     def write_stem_references(self):
         # Используем стеммер Портера для русского языка для группировки слов по корню
