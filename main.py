@@ -3,7 +3,9 @@ import codecs
 import os
 from checker import Checker
 from tomita_executor import Executor
+from algporter2 import Porter
 import bs4  # https://www.crummy.com/software/BeautifulSoup/bs4/doc/
+
 
 # filepath = 'data-raw/'
 original_filepath = 'original/'
@@ -58,5 +60,8 @@ for filename in filenames:
             values[value] += 1
         else:
             values[value] = 1
+
+stemmer = Porter()
+stemmer.process(values)
 
 print('yaay!')

@@ -1,5 +1,8 @@
 import re
 import os
+import pickle
+import operator
+
 
 class Porter:
     PERFECTIVEGROUND = re.compile(u"((ив|ивши|ившись|ыв|ывши|ывшись)|((?<=[ая])(в|вши|вшись)))$")
@@ -22,7 +25,8 @@ class Porter:
         word = word.lower()
         word = word.replace(u'ё', u'е')
         m = re.match(Porter.RVRE, word)
-        if m.groups():
+        print(word)
+        if hasattr(m, 'groups') and m.groups():
             pre = m.group(1)
             rv = m.group(2)
             temp = Porter.PERFECTIVEGROUND.sub('', rv, 1)
@@ -57,27 +61,21 @@ class Porter:
 
     stem = staticmethod(stem)
 
-def process(words):
-    resulting_dict = {}
-    for key, value in words.items():
-        stem = Porter.stem(key)
-        if stem in resulting_dict:
-            resulting_dict[stem] += words[key]
-        else:
-            resulting_dict[stem] = words[key]
+    def process(self, words):
+        resulting_dict = {}
+        for key, value in words.items():
+            stem = self.stem(key)
+            if stem in resulting_dict:
+                resulting_dict[stem] += words[key]
+            else:
+                resulting_dict[stem] = words[key]
 
+        dictlist = []
+        for key, value in resulting_dict.items():
+            temp = [key, value]
+            dictlist.append(temp)
 
-
-    with open('test.txt', 'w', encoding='utf-8') as file:
-        for record in words:
-            for key, value in record.items():
-                file.write(f'\n{key}: {value}')
-            file.write('\n')
-            words.sort(key=lambda i: i[n], reverse=True)
-
-
-
-
-
-if __name__ == '__main__':
-   print (Porter.stem(u''))
+        dictlist.sort(key=lambda i: i[1], reverse=True)
+        with open('test.txt', 'w', encoding='utf-8') as file:
+            for record in dictlist:
+                file.write(f'\n{record[0]}: {record[1]}\n')
