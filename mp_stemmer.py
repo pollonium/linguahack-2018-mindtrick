@@ -24,7 +24,6 @@ class Stemmer:
         word = word.lower()
         word = word.replace(u'ё', u'е')
         m = re.match(Stemmer.RVRE, word)
-        print(word)
         if hasattr(m, 'groups') and m.groups():
             pre = m.group(1)
             rv = m.group(2)
@@ -62,7 +61,7 @@ class Stemmer:
     stem = staticmethod(stem)
 
     def process(self, words):
-        for word, frequency in words.items():
+        for word, reference in words.items():
             stem = self.stem(word)
             if stem in self.stems:
                 self.stems[stem] += words[word]
@@ -71,8 +70,8 @@ class Stemmer:
 
     def print_to_file(self, filename):
         entries = []
-        for word_stem, stem_frequency in self.stems.items():
-            temp_entry = [word_stem, stem_frequency]
+        for word_stem, stem_reference in self.stems.items():
+            temp_entry = [word_stem, stem_reference]
             entries.append(temp_entry)
 
         entries.sort(key=lambda i: i[1], reverse=True)
