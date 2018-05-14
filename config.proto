@@ -2,7 +2,7 @@ encoding "utf8";
 
 TTextMinerConfig {
   Dictionary = "dic.gzt";
-  Input = {File = "9_1.txt"}
+  Input = {File = "input.txt"}
 
   Articles = [
     { Name = "существительное" }

@@ -2,10 +2,9 @@ from analyzer import Analyzer
 
 
 # данные для работы кода
-secret_key = 'g96Xpx8RUpIq893'
-prevFilename = '9_1.txt'
+secret_key = 'A Very Secret Key That You Do Not Want To Compromise'
 
 analyzer = Analyzer(secret_key)
 # analyzer.categorize_texts()
-analyzer.calculate_word_references(prevFilename)
+analyzer.calculate_word_references()
 analyzer.write_stem_references()

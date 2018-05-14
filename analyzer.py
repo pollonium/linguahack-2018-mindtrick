@@ -1,5 +1,6 @@
 import os
 import bs4
+from shutil import copyfile
 from plagiarism_checker import Checker
 from tomita_executor import Executor
 from mp_stemmer import Stemmer
@@ -11,6 +12,7 @@ class Analyzer:
         'rawDataDir': 'data-raw/',
         'originalTextsDir': 'original/',
         'nonoriginalTextsDir': 'nonoriginal/',
+        'TomitaInput': 'input.txt',
         'TomitaOutput': 'facts.txt',
         'MPStemmerOutput': 'stems.txt',
     }
@@ -41,12 +43,14 @@ class Analyzer:
             file.close()
 
     # Выделяем список наиболее частотных слов в отзывах
-    def calculate_word_references(self, prev_filename):
-        parser = Executor(prev_filename)
+    def calculate_word_references(self):
+        parser = Executor()
         filenames = os.listdir(self.payload['originalTextsDir'])
         for filename in filenames:
-            # todo: перемещать обрабатываемый файл в корень и удалять
-            parser.execute(filename)
+            path = self.payload['originalTextsDir'] + filename
+            copyfile(path, self.payload['TomitaInput'])
+            parser.execute()
+            os.remove(path)
             with open(self.payload['TomitaOutput'], 'r', encoding='utf-8-sig') as file:
                 data = file.read()
                 soup = bs4.BeautifulSoup(data, 'lxml')
